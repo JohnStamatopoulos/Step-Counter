@@ -67,6 +67,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         // by the id given to that TextView
         val tv_stepsTaken = findViewById<TextView>(R.id.tv_stepsTaken)
 
+        val tvTotalStepsValue = findViewById<TextView>(R.id.tvTSValue)
+        val tvPreviousTotalStepsValue = findViewById<TextView>(R.id.tvPTSValue)
+
         if (running) {
             totalSteps = event!!.values[0]
 
@@ -76,6 +79,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
             // It will show the current steps to the user
             tv_stepsTaken.text = ("$currentSteps")
+
+            tvTotalStepsValue.text = totalSteps.toString()
+            tvPreviousTotalStepsValue.text = previousTotalSteps.toString()
         }
     }
 

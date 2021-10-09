@@ -36,4 +36,42 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/steps" />
 
+    <TextView
+        android:id="@+id/tvTotalSteps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:text="Total Steps"
+        app:layout_constraintEnd_toStartOf="@+id/tvPreviousTotalSteps"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvPreviousTotalSteps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:text="Previous Total Steps"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/tvTotalSteps"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvTSValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="e"
+        app:layout_constraintStart_toStartOf="@+id/tvTotalSteps"
+        app:layout_constraintTop_toBottomOf="@+id/tvTotalSteps" />
+
+    <TextView
+        android:id="@+id/tvPTSValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="r"
+        app:layout_constraintStart_toStartOf="@+id/tvPreviousTotalSteps"
+        app:layout_constraintTop_toBottomOf="@+id/tvPreviousTotalSteps" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
