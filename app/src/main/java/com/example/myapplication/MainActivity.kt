@@ -1,48 +1,50 @@
 package com.example.myapplication
 
-import android.content.Context
-import android.hardware.Sensor
-import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
-import android.hardware.SensorManager
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.Button
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
+import com.example.myapplication.Services.StepTrackingService
 
-class MainActivity : AppCompatActivity(), SensorEventListener {
-    // Added SensorEventListener the MainActivity class
-    // Implement all the members in the class MainActivity
-    // after adding SensorEventListener
+class MainActivity : AppCompatActivity() {
 
-    // we have assigned sensorManger to nullable
-    private var sensorManager: SensorManager? = null
-
-    // Creating a variable which will give the running status
-    // and initially given the boolean value as false
-    private var running = false
-
-    // Creating a variable which will counts total steps
-    // and it has been given the value of 0 float
-    private var totalSteps = 0f
-
-    // Creating a variable  which counts previous total
-    // steps and it has also been given the value of 0 float
-    private var previousTotalSteps = 0f
+    lateinit var notificationManager: NotificationManagerCompat
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        loadData()
-        resetSteps()
+        val btnStart = findViewById<Button>(R.id.btnStart)
+        val btnStop = findViewById<Button>(R.id.btnStop)
 
-        // Adding a context of SENSOR_SERVICE aas Sensor Manager
-        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        notificationManager = NotificationManagerCompat.from(this)
+
+        btnStart.setOnClickListener {
+            startStepTrackingService()
+        }
+        btnStop.setOnClickListener {
+            stopStepTrackingService()
+        }
     }
 
-    override fun onResume() {
+    private fun startStepTrackingService() {
+        val serviceIntent = Intent(this, StepTrackingService::class.java)
+
+        startService(serviceIntent)
+
+        //or this, maybe better
+        ContextCompat.startForegroundService(this, serviceIntent)
+    }
+
+    private fun stopStepTrackingService() {
+        val serviceIntent = Intent(this, StepTrackingService::class.java)
+
+        stopService(serviceIntent)
+    }
+
+    /*override fun onResume() {
         super.onResume()
         running = true
 
@@ -129,9 +131,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         Log.d("MainActivity", "$savedNumber")
 
         previousTotalSteps = savedNumber
-    }
+    }*/
 
-    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-        // We do not have to write anything in this function for this app
-    }
 }
