@@ -5,6 +5,9 @@
       <map>
         <entry key="..\:/Users/John/Desktop/Android_Projects/MyApplication/app/src/main/res/drawable/notification_icon.xml" value="0.3828125" />
         <entry key="..\:/Users/John/Desktop/Android_Projects/MyApplication/app/src/main/res/layout/activity_main.xml" value="0.3066123188405797" />
+        <entry key="..\:/Users/John/Desktop/Android_Projects/MyApplication/app/src/main/res/layout/notification_expanded.xml" value="0.3555253623188406" />
+        <entry key="..\:/Users/John/Desktop/Android_Projects/MyApplication/app/src/main/res/layout/notification_small.xml" value="0.3555253623188406" />
+        <entry key="..\:/Users/John/Desktop/Android_Projects/MyApplication/app/src/main/res/layout/test.xml" value="0.3555253623188406" />
       </map>
     </option>
   </component>

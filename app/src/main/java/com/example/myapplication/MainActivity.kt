@@ -1,8 +1,10 @@
 package com.example.myapplication
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -10,7 +12,8 @@ import com.example.myapplication.Services.StepTrackingService
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var notificationManager: NotificationManagerCompat
+    //private var previousTotalSteps = 0f
+    private lateinit var notificationManager: NotificationManagerCompat
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,6 +23,9 @@ class MainActivity : AppCompatActivity() {
         val btnStop = findViewById<Button>(R.id.btnStop)
 
         notificationManager = NotificationManagerCompat.from(this)
+
+        //loadData()
+        //resetSteps()
 
         btnStart.setOnClickListener {
             startStepTrackingService()
@@ -31,9 +37,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun startStepTrackingService() {
         val serviceIntent = Intent(this, StepTrackingService::class.java)
+        //serviceIntent.putExtra("previousTotalSteps", previousTotalSteps)
 
-        startService(serviceIntent)
-
+        //startService(serviceIntent)
         //or this, maybe better
         ContextCompat.startForegroundService(this, serviceIntent)
     }
@@ -122,6 +128,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadData() {
+
+        // In this function we will retrieve data
+        val sharedPreferences = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        val savedNumber = sharedPreferences.getFloat("key1", 0f)
+
+        // Log.d is used for debugging purposes
+        Log.d("MainActivity", "$savedNumber")
+
+        previousTotalSteps = savedNumber
+    }*/
+
+    /*private fun loadData() {
 
         // In this function we will retrieve data
         val sharedPreferences = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvTotalPreviousSteps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total Previous Steps"
+            style="@style/TextAppearance.Compat.Notification.Title" />
+
+        <TextView
+            android:id="@+id/tvTotalPreviousStepsValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            style="@style/TextAppearance.Compat.Notification.Info" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvCurrentSteps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Current Steps"
+            style="@style/TextAppearance.Compat.Notification.Title" />
+
+        <TextView
+            android:id="@+id/tvCurrentStepsValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            style="@style/TextAppearance.Compat.Notification.Info" />
+    </LinearLayout>
+</LinearLayout>
