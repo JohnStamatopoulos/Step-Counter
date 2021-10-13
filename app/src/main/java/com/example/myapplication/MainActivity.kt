@@ -1,19 +1,13 @@
 package com.example.myapplication
 
-import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
-import androidx.core.app.NotificationManagerCompat
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.myapplication.Services.StepTrackingService
 
 class MainActivity : AppCompatActivity() {
-
-    //private var previousTotalSteps = 0f
-    private lateinit var notificationManager: NotificationManagerCompat
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,11 +15,6 @@ class MainActivity : AppCompatActivity() {
 
         val btnStart = findViewById<Button>(R.id.btnStart)
         val btnStop = findViewById<Button>(R.id.btnStop)
-
-        notificationManager = NotificationManagerCompat.from(this)
-
-        //loadData()
-        //resetSteps()
 
         btnStart.setOnClickListener {
             startStepTrackingService()
