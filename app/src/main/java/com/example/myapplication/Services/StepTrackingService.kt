@@ -35,12 +35,6 @@ class StepTrackingService: Service(), SensorEventListener {
 
     private lateinit var notificationManager: NotificationManagerCompat
 
-    //TODO("pending intent flag na mhn anoigei neo activity ka8e fora pou pataw sto notification")
-    //status: FIXED (?)
-
-    //TODO("giati den ananewnetai to text sto custom notification layout?")
-    //status: FIXED
-
     //this will be called only the first time we create our service
     override fun onCreate() {
         super.onCreate()
@@ -50,7 +44,7 @@ class StepTrackingService: Service(), SensorEventListener {
 
         notificationManager = NotificationManagerCompat.from(this)
 
-        // Adding a context of SENSOR_SERVICE aas Sensor Manager
+        // Adding a context of SENSOR_SERVICE as Sensor Manager
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         val stepSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
         if (stepSensor == null) {

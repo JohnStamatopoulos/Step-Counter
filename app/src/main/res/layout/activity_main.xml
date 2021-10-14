@@ -36,44 +36,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/steps" />
 
-    <TextView
-        android:id="@+id/tvTotalSteps"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        android:text="Total Steps"
-        app:layout_constraintEnd_toStartOf="@+id/tvPreviousTotalSteps"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tvPreviousTotalSteps"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        android:text="Previous Total Steps"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/tvTotalSteps"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tvTSValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="e"
-        app:layout_constraintStart_toStartOf="@+id/tvTotalSteps"
-        app:layout_constraintTop_toBottomOf="@+id/tvTotalSteps" />
-
-    <TextView
-        android:id="@+id/tvPTSValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="r"
-        app:layout_constraintStart_toStartOf="@+id/tvPreviousTotalSteps"
-        app:layout_constraintTop_toBottomOf="@+id/tvPreviousTotalSteps" />
-
     <Button
         android:id="@+id/btnStart"
         android:layout_width="wrap_content"
@@ -97,5 +59,48 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/btnStart"
         app:layout_constraintTop_toBottomOf="@+id/tv_stepsTaken" />
+
+    <TextView
+        android:id="@+id/tvEntry1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/steps"
+        app:layout_constraintEnd_toStartOf="@+id/tvEntry2"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvEntry2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/steps"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/tvEntry1"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvDates"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvEntriesWithDatesSorted"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/tvEntry1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvDates" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
