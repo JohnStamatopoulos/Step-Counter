@@ -1,9 +1,21 @@
 package com.example.myapplication.Model
 
 import android.util.Log
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
+@Entity(tableName = "entry_table")
+data class Entry(
+    @PrimaryKey
+    @ColumnInfo(name = "date")
+    val date: String,
 
-data class Entry(var id: Int, var date: String, var steps: Float){
+    @ColumnInfo(name = "id")
+    val id: Int,
+
+    @ColumnInfo(name = "steps")
+    val steps: Float){
 
     override fun toString(): String {
         return date.toString()

@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.app.Activity
 import android.content.Intent
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
@@ -7,20 +8,52 @@ import android.os.Build
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.myapplication.Adapters.EntryListAdapter
 import com.example.myapplication.Model.Entry
 import com.example.myapplication.Model.Entry.MyComparator
 import com.example.myapplication.Services.StepTrackingService
+import com.example.myapplication.ViewModels.EntryViewModel
+import com.example.myapplication.ViewModels.EntryViewModelFactory
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
+
+    private val entryViewModel: EntryViewModel by viewModels {
+        EntryViewModelFactory((application as MyApp).repository)
+    }
+    private val newEntryActivityRequestCode = 1
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val recyclerView = findViewById<RecyclerView>(R.id.recyclerview)
+        val adapter = EntryListAdapter()
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+        // Add an observer on the LiveData returned by getAllEntries.
+        // The onChanged() method fires when the observed data changes and the activity is
+        // in the foreground.
+        entryViewModel.allEntries.observe(this) { entries ->
+            // Update the cached copy of the entries in the adapter.
+            entries?.let { adapter.submitList(it) }
+        }
+
+        val fab = findViewById<FloatingActionButton>(R.id.fab)
+        fab.setOnClickListener {
+            val intent = Intent(this@MainActivity, NewEntryActivity::class.java)
+            startActivityForResult(intent, newEntryActivityRequestCode)
+        }
 
         val btnStart = findViewById<Button>(R.id.btnStart)
         val btnStop = findViewById<Button>(R.id.btnStop)
@@ -59,17 +92,17 @@ class MainActivity : AppCompatActivity() {
         dates.add(date10)
         dates.add(date11)
 
-        val entry1 = Entry(1, date1, 100f)
-        val entry2 = Entry(2, date2, 200f)
-        val entry3 = Entry(3, date3, 100f)
-        val entry4 = Entry(4, date4, 200f)
-        val entry5 = Entry(5, date5, 100f)
-        val entry6 = Entry(6, date6, 200f)
-        val entry7 = Entry(7, date7, 100f)
-        val entry8 = Entry(8, date8, 200f)
-        val entry9 = Entry(9, date9, 100f)
-        val entry10 = Entry(10, date10, 200f)
-        val entry11 = Entry(11, date11, 200f)
+        val entry1 = Entry(date1,1,100f)
+        val entry2 = Entry(date2,2,200f)
+        val entry3 = Entry(date3,3,100f)
+        val entry4 = Entry(date4,4,200f)
+        val entry5 = Entry(date5,5,100f)
+        val entry6 = Entry(date6,6,200f)
+        val entry7 = Entry(date7,7,100f)
+        val entry8 = Entry(date8,8,200f)
+        val entry9 = Entry(date9,9,100f)
+        val entry10 = Entry(date10, 10, 200f)
+        val entry11 = Entry(date11, 11, 200f)
 
         val entries = arrayListOf<Entry>()
         entries.add(entry1)
@@ -93,7 +126,6 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<TextView>(R.id.tvEntry1).text = entry1.toString()
         findViewById<TextView>(R.id.tvEntry2).text = entry2.toString()
-
     }
 
 
@@ -110,6 +142,23 @@ class MainActivity : AppCompatActivity() {
         val serviceIntent = Intent(this, StepTrackingService::class.java)
 
         stopService(serviceIntent)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, intentData: Intent?) {
+        super.onActivityResult(requestCode, resultCode, intentData)
+
+        if (requestCode == newEntryActivityRequestCode && resultCode == Activity.RESULT_OK) {
+            intentData?.getStringExtra(NewEntryActivity.EXTRA_REPLY)?.let { reply ->
+                val entry = Entry(reply,555, 5555f)
+                entryViewModel.insert(entry)
+            }
+        } else {
+            Toast.makeText(
+                applicationContext,
+                R.string.empty_not_saved,
+                Toast.LENGTH_LONG
+            ).show()
+        }
     }
 
     /*override fun onResume() {

@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">My Application</string>
+
+    <string name="add_entry">Add Entry</string>
+    <string name="hint_entry">Entry...</string>
+    <string name="button_save">Save</string>
+    <string name="empty_not_saved">Entry not saved because it is empty.</string>
 </resources>

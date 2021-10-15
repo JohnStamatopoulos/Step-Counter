@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.myapplication">
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
 
-    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
     <uses-feature
         android:name="android.hardware.sensor.stepcounter"
-        android:required="true"/>
+        android:required="true" />
 
     <application
         android:name=".MyApp"
@@ -18,7 +17,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
-
+        <activity
+            android:name=".NewEntryActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
