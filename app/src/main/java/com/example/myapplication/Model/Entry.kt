@@ -5,7 +5,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "entry_table")
+@Entity(tableName = "entry_table"/*, primaryKeys = ["date","id"]*/)
 data class Entry(
     @PrimaryKey
     @ColumnInfo(name = "date")
@@ -15,11 +15,11 @@ data class Entry(
     val id: Int,
 
     @ColumnInfo(name = "steps")
-    val steps: Float){
+    var steps: Float){
 
-    override fun toString(): String {
+    /*override fun toString(): String {
         return date.toString()
-    }
+    }*/
 
     companion object MyComparator:Comparator<Entry>{
         var counter = 0

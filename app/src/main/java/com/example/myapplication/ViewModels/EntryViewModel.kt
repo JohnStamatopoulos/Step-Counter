@@ -11,7 +11,11 @@ class EntryViewModel(private val repository: EntryRepository) : ViewModel() {
     // - We can put an observer on the data (instead of polling for changes) and only update the
     //   the UI when the data actually changes.
     // - Repository is completely separated from the UI through the ViewModel.
-    val allEntries: LiveData<List<Entry>> = repository.allEntries.asLiveData()
+    val allEntries/*: LiveData<List<Entry>>*/ = repository.allEntries
+    val latestEntry/*: LiveData<Entry>*/ = repository.lastEntry
+    val todayIRun = repository.todayIRun
+
+    var stepsGoal = "/540" //TODO make this varieable defined by user
 
     /**
      * Launching a new coroutine to insert the data in a non-blocking way

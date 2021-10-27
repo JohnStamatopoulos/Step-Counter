@@ -1,14 +1,17 @@
 package com.example.myapplication
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
-import android.icu.text.SimpleDateFormat
-import android.icu.util.Calendar
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.os.Build
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
+import android.util.Log
+import android.view.View
+import android.widget.*
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -17,24 +20,44 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.Adapters.EntryListAdapter
 import com.example.myapplication.Model.Entry
-import com.example.myapplication.Model.Entry.MyComparator
 import com.example.myapplication.Services.StepTrackingService
 import com.example.myapplication.ViewModels.EntryViewModel
 import com.example.myapplication.ViewModels.EntryViewModelFactory
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import java.text.SimpleDateFormat
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+
+class MainActivity : AppCompatActivity(), SensorEventListener {
+
+    //TODO() Fix sorting dates from DB [pending]
+    //TODO Make your UI [pending]
+    //TODO look at GitHub for charts. [pending]
+    //TODO fix resetting steps logic [pending]
+
+    //TODO bale leitourgia gia save/load data edw mesa [pending]
+    //TODO bale leitourgia gia na stelneis actions sto Service [pending]
 
     private val entryViewModel: EntryViewModel by viewModels {
         EntryViewModelFactory((application as MyApp).repository)
     }
     private val newEntryActivityRequestCode = 1
 
+    private var sensorManager: SensorManager? = null
+    private var running = false
+    // Creating a variable which will counts total steps
+    // and it has been given the value of 0 float
+    private var totalSteps = 0f
+    // Creating a variable  which counts previous total
+    // steps and it has also been given the value of 0 float
+    private var previousTotalSteps = 0f
+
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
 
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerview)
         val adapter = EntryListAdapter()
@@ -46,8 +69,34 @@ class MainActivity : AppCompatActivity() {
         // in the foreground.
         entryViewModel.allEntries.observe(this) { entries ->
             // Update the cached copy of the entries in the adapter.
-            entries?.let { adapter.submitList(it) }
+            entries?.let {
+                adapter.submitList(it)
+            }
         }
+        entryViewModel.latestEntry.observe(this) { latestEntry ->
+            //grafei null sto TextView otan o pinakas einai empty
+            //findViewById<TextView>(R.id.tv_stepsTaken).text = latestEntry?.steps.toString()
+            //ara protimame auto:
+            if (latestEntry != null) {
+                findViewById<TextView>(R.id.tv_stepsTaken).text = latestEntry.steps.toString()
+            }
+            else {
+                findViewById<TextView>(R.id.tv_stepsTaken).text = "-69" //TODO fix that :P
+            }
+        }
+        //TODO make this happen in ViewModel...
+        val stepsGoal = entryViewModel.stepsGoal
+        findViewById<TextView>(R.id.tvTargetSteps).text = stepsGoal
+        findViewById<ProgressBar>(R.id.progressBar).let { seekBar ->
+            val currentSteps = findViewById<TextView>(R.id.tvSteps).text.toString().toInt()
+            val test = stepsGoal.substring(1).toInt()
+            val perCentGoal = ((currentSteps.toFloat() / test.toFloat()) * 100).toInt()
+            seekBar.progress = perCentGoal
+            if (perCentGoal >= 100){
+                findViewById<ImageView>(R.id.imgFire).visibility = View.VISIBLE
+            }
+        }
+
 
         val fab = findViewById<FloatingActionButton>(R.id.fab)
         fab.setOnClickListener {
@@ -59,12 +108,115 @@ class MainActivity : AppCompatActivity() {
         val btnStop = findViewById<Button>(R.id.btnStop)
 
         btnStart.setOnClickListener {
-            startStepTrackingService()
+            //startStepTrackingService()
         }
         btnStop.setOnClickListener {
-            stopStepTrackingService()
+            //stopStepTrackingService()
         }
 
+        mLoadData()
+        mResetSteps()
+        // Adding a context of SENSOR_SERVICE aas Sensor Manager
+        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+
+        //addTestEntries()
+    }
+
+    private fun mResetSteps() {
+        val mStepsTaken = findViewById<TextView>(R.id.tvDebugSteps)
+        mStepsTaken.setOnClickListener {
+            // This will give a toast message if the user want to reset the steps
+            Toast.makeText(this, "Long tap to reset steps", Toast.LENGTH_SHORT).show()
+        }
+
+        mStepsTaken.setOnLongClickListener {
+
+            previousTotalSteps = totalSteps
+            // This will save the data
+            mSaveData()
+            Log.d("MainActivity", "mResetSteps, previousTotalSteps:$previousTotalSteps")
+
+            // When the user will click long tap on the screen,
+            // the steps will be reset to 0
+            mStepsTaken.text = 0.toString()
+
+            true
+        }
+
+    }
+
+    private fun mSaveData() {
+        val latestEntry = entryViewModel.latestEntry
+        Log.d("MainActivity", "mSaveData, replaced latestEntry:${latestEntry.value.toString()}")
+        latestEntry.value?.let {
+            it.steps = previousTotalSteps
+            entryViewModel.insert(it)
+        }
+        Log.d("MainActivity", "mSaveData, with:${latestEntry.value.toString()}")
+    }
+
+    private fun mLoadData() {
+        val lastEntry = entryViewModel.latestEntry
+        previousTotalSteps = lastEntry.value?.steps ?: 0f
+        Log.d("MainActivity", "mLoadData, lastEntry:${lastEntry.value.toString()}" +
+                " previousTotalSteps:${previousTotalSteps}")
+    }
+
+    override fun onSensorChanged(event: SensorEvent?) {
+        val mStepsTaken = findViewById<TextView>(R.id.tvDebugSteps)
+        if (running) {
+            totalSteps = event!!.values[0]
+
+            // Current steps are calculated by taking the difference of total steps
+            // and previous steps
+            val currentSteps = totalSteps.toInt() - previousTotalSteps.toInt()
+
+            // It will show the current steps to the user
+            mStepsTaken.text = ("$currentSteps")
+            Log.d("MainActivity, sensorChanged" , "\n previousTotalSteps = ${previousTotalSteps}"
+                    + " totalSteps = ${totalSteps}"
+                    + " currentSteps = ${currentSteps}")
+        }
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+        // We do not have to write anything in this function for this app
+    }
+
+    private fun startStepTrackingService() {
+        val serviceIntent = Intent(this, StepTrackingService::class.java)
+        //serviceIntent.putExtra("previousTotalSteps", previousTotalSteps)
+
+        //startService(serviceIntent)
+        //or this, maybe better
+        ContextCompat.startForegroundService(this, serviceIntent)
+    }
+
+    private fun stopStepTrackingService() {
+        val serviceIntent = Intent(this, StepTrackingService::class.java)
+
+        stopService(serviceIntent)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, intentData: Intent?) {
+        super.onActivityResult(requestCode, resultCode, intentData)
+
+        if (requestCode == newEntryActivityRequestCode && resultCode == Activity.RESULT_OK) {
+            intentData?.getStringExtra(NewEntryActivity.EXTRA_REPLY)?.let { reply ->
+                val entry = Entry(reply,555, 5555f)
+                entryViewModel.insert(entry)
+            }
+        } else {
+            Toast.makeText(
+                applicationContext,
+                R.string.empty_not_saved,
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
+    /*@RequiresApi(Build.VERSION_CODES.N)
+    private fun addTestEntries() {
         val calendar: Calendar = Calendar.getInstance()
         val dateFormat = SimpleDateFormat("dd/MM/yyyy")
         val date1 = dateFormat.format(calendar.time)
@@ -126,42 +278,10 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<TextView>(R.id.tvEntry1).text = entry1.toString()
         findViewById<TextView>(R.id.tvEntry2).text = entry2.toString()
-    }
+    }*/
 
 
-    private fun startStepTrackingService() {
-        val serviceIntent = Intent(this, StepTrackingService::class.java)
-        //serviceIntent.putExtra("previousTotalSteps", previousTotalSteps)
-
-        //startService(serviceIntent)
-        //or this, maybe better
-        ContextCompat.startForegroundService(this, serviceIntent)
-    }
-
-    private fun stopStepTrackingService() {
-        val serviceIntent = Intent(this, StepTrackingService::class.java)
-
-        stopService(serviceIntent)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, intentData: Intent?) {
-        super.onActivityResult(requestCode, resultCode, intentData)
-
-        if (requestCode == newEntryActivityRequestCode && resultCode == Activity.RESULT_OK) {
-            intentData?.getStringExtra(NewEntryActivity.EXTRA_REPLY)?.let { reply ->
-                val entry = Entry(reply,555, 5555f)
-                entryViewModel.insert(entry)
-            }
-        } else {
-            Toast.makeText(
-                applicationContext,
-                R.string.empty_not_saved,
-                Toast.LENGTH_LONG
-            ).show()
-        }
-    }
-
-    /*override fun onResume() {
+    override fun onResume() {
         super.onResume()
         running = true
 
@@ -177,30 +297,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             // Rate suitable for the user interface
             sensorManager?.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_UI)
-        }
-    }
-
-    override fun onSensorChanged(event: SensorEvent?) {
-
-        // Calling the TextView that we made in activity_main.xml
-        // by the id given to that TextView
-        val tv_stepsTaken = findViewById<TextView>(R.id.tv_stepsTaken)
-
-        val tvTotalStepsValue = findViewById<TextView>(R.id.tvTSValue)
-        val tvPreviousTotalStepsValue = findViewById<TextView>(R.id.tvPTSValue)
-
-        if (running) {
-            totalSteps = event!!.values[0]
-
-            // Current steps are calculated by taking the difference of total steps
-            // and previous steps
-            val currentSteps = totalSteps.toInt() - previousTotalSteps.toInt()
-
-            // It will show the current steps to the user
-            tv_stepsTaken.text = ("$currentSteps")
-
-            tvTotalStepsValue.text = totalSteps.toString()
-            tvPreviousTotalStepsValue.text = previousTotalSteps.toString()
         }
     }
 
@@ -248,18 +344,6 @@ class MainActivity : AppCompatActivity() {
         Log.d("MainActivity", "$savedNumber")
 
         previousTotalSteps = savedNumber
-    }*/
-
-    /*private fun loadData() {
-
-        // In this function we will retrieve data
-        val sharedPreferences = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
-        val savedNumber = sharedPreferences.getFloat("key1", 0f)
-
-        // Log.d is used for debugging purposes
-        Log.d("MainActivity", "$savedNumber")
-
-        previousTotalSteps = savedNumber
-    }*/
+    }
 
 }

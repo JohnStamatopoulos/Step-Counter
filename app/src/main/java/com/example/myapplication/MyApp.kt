@@ -19,6 +19,7 @@ class MyApp : Application() {
     val database by lazy { EntryRoomDatabase.getDatabase(this, applicationScope) }
     val repository by lazy { EntryRepository(database.entryDao()) }
 
+
     companion object {
         const val CHANNEL_ID = "Service Channel Notification"
     }

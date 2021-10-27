@@ -3,8 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/John/Desktop/Android_Projects/MyApplication/app/src/main/res/drawable/ic_fire_24.xml" value="0.3402777777777778" />
         <entry key="..\:/Users/John/Desktop/Android_Projects/MyApplication/app/src/main/res/drawable/notification_icon.xml" value="0.3828125" />
-        <entry key="..\:/Users/John/Desktop/Android_Projects/MyApplication/app/src/main/res/layout/activity_main.xml" value="0.3066123188405797" />
+        <entry key="..\:/Users/John/Desktop/Android_Projects/MyApplication/app/src/main/res/font/audiowide.xml" value="0.3527777777777778" />
+        <entry key="..\:/Users/John/Desktop/Android_Projects/MyApplication/app/src/main/res/layout/activity_main.xml" value="0.29981884057971014" />
+        <entry key="..\:/Users/John/Desktop/Android_Projects/MyApplication/app/src/main/res/layout/activity_main2.xml" value="0.32155797101449274" />
         <entry key="..\:/Users/John/Desktop/Android_Projects/MyApplication/app/src/main/res/layout/activity_new_entry.xml" value="0.1" />
         <entry key="..\:/Users/John/Desktop/Android_Projects/MyApplication/app/src/main/res/layout/notification_expanded.xml" value="0.3555253623188406" />
         <entry key="..\:/Users/John/Desktop/Android_Projects/MyApplication/app/src/main/res/layout/notification_large.xml" value="0.33" />

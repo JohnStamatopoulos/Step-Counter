@@ -2,7 +2,6 @@ package com.example.myapplication.Services
 
 import android.app.Notification
 import android.app.PendingIntent
-import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.hardware.Sensor
@@ -15,31 +14,44 @@ import android.widget.RemoteViews
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.lifecycle.LifecycleService
+import androidx.lifecycle.MutableLiveData
 import com.example.myapplication.MainActivity
 import com.example.myapplication.MyApp
 import com.example.myapplication.R
+import kotlinx.coroutines.runBlocking
 
-class StepTrackingService: Service(), SensorEventListener {
+class StepTrackingService: LifecycleService(), SensorEventListener {
 
-    private var sensorManager: SensorManager? = null
-    private var running = false
-    private var totalSteps  = 0f
-    private var previousTotalSteps  = 0f
-    private var currentSteps = 0
+    var sensorManager: SensorManager? = null
+    //TODO allaze opws prepei tis times tous, gt twra einai LiveData
+
+    //TODO alla3e auta, me ta parakatw companion object
+    var running : Boolean = false
+    var totalSteps = Float
+    var previousTotalSteps = Float
+    var currentSteps = Int
+
+    /*companion object {
+        var running = MutableLiveData<Boolean>()
+        var totalSteps = MutableLiveData<Float>()
+        var previousTotalSteps = MutableLiveData<Float>()
+        var currentSteps = MutableLiveData<Int>()
+    }*/
+
 
     // Get the layouts to use in the custom notification
-    private var notificationLayout : RemoteViews? = null
-    private var notificationLayoutExpanded : RemoteViews? = null
+    var notificationLayout : RemoteViews? = null
+    var notificationLayoutExpanded : RemoteViews? = null
 
-    private lateinit var globalNotification: Notification
+    lateinit var globalNotification: Notification
 
-    private lateinit var notificationManager: NotificationManagerCompat
+    lateinit var notificationManager: NotificationManagerCompat
 
     //this will be called only the first time we create our service
     override fun onCreate() {
         super.onCreate()
         Log.d("Service", "onCreate called")
-
         running = true
 
         notificationManager = NotificationManagerCompat.from(this)
@@ -82,10 +94,11 @@ class StepTrackingService: Service(), SensorEventListener {
 
     //this will be called every time we call startService()
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        super.onStartCommand(intent, flags, startId)
         Log.d("Service", "onStartCommand called")
         //return super.onStartCommand(intent, flags, startId)
 
-        loadData()
+        //loadData()
         startForeground(1,globalNotification)
 
         return START_STICKY
@@ -94,56 +107,18 @@ class StepTrackingService: Service(), SensorEventListener {
     override fun onDestroy() {
         super.onDestroy()
         Log.d("Service", "onDestroy called")
-
-        saveData()
+        //previousTotalSteps = totalSteps
+        //saveData()
     }
 
-    override fun onBind(p0: Intent?): IBinder? {
+    override fun onBind(p0: Intent): IBinder? {
+        super.onBind(p0)
         Log.d("Service", "onBind called")
         return null
     }
 
-    private fun saveData() {
-        // Shared Preferences will allow us to save
-        // and retrieve data in the form of key,value pair.
-        // In this function we will save data
-        val sharedPreferences = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
-
-        val editor = sharedPreferences.edit()
-        // og:
-        editor.putFloat("key1", previousTotalSteps)
-        //editor.putFloat("key1", totalSteps)
-        editor.apply()
-
-        Log.d("Service, save Data" , "\n previousTotalSteps = ${previousTotalSteps}" +
-                "\n totalSteps = ${totalSteps}")
-    }
-
-    private fun loadData() {
-        // In this function we will retrieve data
-        val sharedPreferences = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
-        val savedNumber = sharedPreferences.getFloat("key1", 0f)
-        previousTotalSteps = savedNumber
-        Log.d("Service, load Data" , "\n previousTotalSteps = ${previousTotalSteps}"
-                + "\n totalSteps = ${totalSteps}"
-                + "\n currentSteps = ${currentSteps}")
-        updateUI()
-    }
-
     override fun onSensorChanged(event: SensorEvent?) {
-        if (running) {
-            totalSteps = event!!.values[0]
 
-            // Current steps are calculated by taking the difference of total steps
-            // and previous steps
-            currentSteps = totalSteps.toInt() - previousTotalSteps.toInt()
-
-            Log.d("Service, sensorChanged" , "\n previousTotalSteps = ${previousTotalSteps}"
-                + "\n totalSteps = ${totalSteps}"
-                + "\n currentSteps = ${currentSteps}")
-
-            updateUI()
-        }
     }
 
     private fun updateUI(){
@@ -161,5 +136,6 @@ class StepTrackingService: Service(), SensorEventListener {
 
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
         //nothing to do here
+        Log.d("Service", "onAccuracyChanged called")
     }
 }

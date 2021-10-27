@@ -90,7 +90,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.6" />
+        app:layout_constraintGuide_percent="0.28" />
 
     <TextView
         android:id="@+id/tvWelcome"
@@ -102,7 +102,7 @@
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textAppearance="@style/TextAppearance.AppCompat.Display3"
-        android:textSize="60sp"
+        android:textSize="24sp"
         android:textStyle="bold|italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -117,7 +117,7 @@
         android:singleLine="false"
         android:text="Today's progress"
         android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -128,7 +128,7 @@
         android:id="@+id/progressBar"
         style="@android:style/Widget.Material.Light.ProgressBar.Horizontal"
         android:layout_width="0dp"
-        android:layout_height="120dp"
+        android:layout_height="30dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:indeterminate="false"
@@ -156,7 +156,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/audiowide"
         android:text="270"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display3"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toStartOf="@+id/tvTargetSteps"
@@ -172,7 +172,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/audiowide"
         android:text="/3500"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display3"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"

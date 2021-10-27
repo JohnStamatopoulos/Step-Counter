@@ -1,6 +1,7 @@
 package com.example.myapplication.Database
 
 import android.content.Context
+import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -18,11 +19,21 @@ abstract class EntryRoomDatabase: RoomDatabase() {
     abstract fun entryDao(): EntryDao
 
     private class EntryDatabaseCallback(private val scope: CoroutineScope) : RoomDatabase.Callback() {
+        override fun onOpen(db: SupportSQLiteDatabase) {
+            super.onOpen(db)
+
+            INSTANCE?.let { database ->
+                scope.launch {
+                    Log.d("Database Callback", "onOpen called")
+                }
+            }
+        }
 
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
             INSTANCE?.let { database ->
                 scope.launch {
+                    Log.d("Database Callback", "onCreate called")
                     val entryDao = database.entryDao()
 
                     // Delete all content here.

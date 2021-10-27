@@ -18,14 +18,14 @@ class EntryListAdapter : ListAdapter<Entry, EntryListAdapter.EntryViewHolder>(En
 
     override fun onBindViewHolder(holder: EntryViewHolder, position: Int) {
         val current = getItem(position)
-        holder.bind(current.date)
+        holder.bind(current)
     }
 
     class EntryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val entryItemView: TextView = itemView.findViewById(R.id.textView)
 
-        fun bind(text: String?) {
-            entryItemView.text = text
+        fun bind(entry: Entry?) {
+            entryItemView.text = entry.toString()
         }
 
         companion object {
