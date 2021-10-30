@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Steps Counter</string>
 
     <string name="add_entry">Add Entry</string>
     <string name="hint_entry">Entry...</string>
