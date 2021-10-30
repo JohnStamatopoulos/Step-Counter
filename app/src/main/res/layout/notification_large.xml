@@ -2,10 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="128dp"
-    android:background="?android:attr/colorMultiSelectHighlight"
     android:orientation="horizontal">
 
-    <LinearLayout
+    <!--<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -24,26 +23,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="TextView" />
-    </LinearLayout>
+    </LinearLayout>-->
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:gravity="center_horizontal"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/tvCurrentSteps"
-            style="@style/TextAppearance.Compat.Notification.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Current Steps" />
+            android:text="Current Steps"
+            style="@style/TextAppearance.Compat.Notification.Title" />
 
         <TextView
             android:id="@+id/tvCurrentStepsValue"
-            style="@style/TextAppearance.Compat.Notification.Info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:text="TextView"
+            style="@style/TextAppearance.Compat.Notification.Info" />
     </LinearLayout>
 </LinearLayout>

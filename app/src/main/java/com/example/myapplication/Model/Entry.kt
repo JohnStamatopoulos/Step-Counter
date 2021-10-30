@@ -15,11 +15,12 @@ data class Entry(
     val id: Int,
 
     @ColumnInfo(name = "steps")
-    var steps: Float){
+    var steps: Int){
 
-    /*override fun toString(): String {
-        return date.toString()
-    }*/
+    override fun toString(): String {
+        return "Date: $date" +
+                "\n\tSteps: $steps"
+    }
 
     companion object MyComparator:Comparator<Entry>{
         var counter = 0

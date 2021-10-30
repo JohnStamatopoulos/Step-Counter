@@ -159,7 +159,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Display3"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
-        app:layout_constraintEnd_toStartOf="@+id/tvTargetSteps"
+        app:layout_constraintEnd_toStartOf="@+id/tvStepsGoal"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
@@ -167,7 +167,7 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-        android:id="@+id/tvTargetSteps"
+        android:id="@+id/tvStepsGoal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/audiowide"

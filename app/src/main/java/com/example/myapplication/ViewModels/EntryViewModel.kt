@@ -1,8 +1,10 @@
 package com.example.myapplication.ViewModels
 
 import androidx.lifecycle.*
+import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.EntryRepository
 import com.example.myapplication.Model.Entry
+import com.example.myapplication.R
 import kotlinx.coroutines.launch
 
 class EntryViewModel(private val repository: EntryRepository) : ViewModel() {
@@ -13,15 +15,19 @@ class EntryViewModel(private val repository: EntryRepository) : ViewModel() {
     // - Repository is completely separated from the UI through the ViewModel.
     val allEntries/*: LiveData<List<Entry>>*/ = repository.allEntries
     val latestEntry/*: LiveData<Entry>*/ = repository.lastEntry
-    val todayIRun = repository.todayIRun
+    val haveIRunToday = repository.haveIRunToday
 
-    var stepsGoal = "/540" //TODO make this varieable defined by user
+    var stepsGoal = "/100" //TODO make this varieable defined by user
 
     /**
      * Launching a new coroutine to insert the data in a non-blocking way
      */
     fun insert(entry: Entry) = viewModelScope.launch {
         repository.insert(entry)
+    }
+
+    fun getTestLastEntryVM(): LiveData<Entry> {
+        return repository.getTestLastEntryRepo()
     }
 }
 

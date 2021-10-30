@@ -23,7 +23,7 @@ class EntryRepository(private val entryDao: EntryDao) {
     val calendar: Calendar = Calendar.getInstance()
     val dateFormat = SimpleDateFormat("dd/MM/yyyy")
     val today = dateFormat.format(calendar.time)
-    val todayIRun  = entryDao.haveIRunToday(today).asLiveData()
+    val haveIRunToday  = entryDao.haveIRunToday(today).asLiveData()
 
     // By default Room runs suspend queries off the main thread, therefore, we don't need to
     // implement anything else to ensure we're not doing long running database work
@@ -35,5 +35,9 @@ class EntryRepository(private val entryDao: EntryDao) {
         //Log.d("Repository, deleteAll..", "${entry} ${testing1}")
         var testing2 = entryDao.insert(entry)
         Log.d("Repository, insert..", "${entry} ${testing2}")
+    }
+
+    fun getTestLastEntryRepo(): LiveData<Entry> {
+        return entryDao.getMostRecentEntry().asLiveData()
     }
 }

@@ -24,7 +24,6 @@ import com.example.myapplication.Services.StepTrackingService
 import com.example.myapplication.ViewModels.EntryViewModel
 import com.example.myapplication.ViewModels.EntryViewModelFactory
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -47,10 +46,10 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private var running = false
     // Creating a variable which will counts total steps
     // and it has been given the value of 0 float
-    private var totalSteps = 0f
+    private var totalSteps = 0
     // Creating a variable  which counts previous total
     // steps and it has also been given the value of 0 float
-    private var previousTotalSteps = 0f
+    private var previousTotalSteps = 0
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,7 +85,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         }
         //TODO make this happen in ViewModel...
         val stepsGoal = entryViewModel.stepsGoal
-        findViewById<TextView>(R.id.tvTargetSteps).text = stepsGoal
+        findViewById<TextView>(R.id.tvStepsGoal).text = stepsGoal
         findViewById<ProgressBar>(R.id.progressBar).let { seekBar ->
             val currentSteps = findViewById<TextView>(R.id.tvSteps).text.toString().toInt()
             val test = stepsGoal.substring(1).toInt()
@@ -157,7 +156,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     private fun mLoadData() {
         val lastEntry = entryViewModel.latestEntry
-        previousTotalSteps = lastEntry.value?.steps ?: 0f
+        previousTotalSteps = lastEntry.value?.steps ?: 0
         Log.d("MainActivity", "mLoadData, lastEntry:${lastEntry.value.toString()}" +
                 " previousTotalSteps:${previousTotalSteps}")
     }
@@ -165,7 +164,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     override fun onSensorChanged(event: SensorEvent?) {
         val mStepsTaken = findViewById<TextView>(R.id.tvDebugSteps)
         if (running) {
-            totalSteps = event!!.values[0]
+            totalSteps = event!!.values[0].toInt()
 
             // Current steps are calculated by taking the difference of total steps
             // and previous steps
@@ -203,7 +202,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
         if (requestCode == newEntryActivityRequestCode && resultCode == Activity.RESULT_OK) {
             intentData?.getStringExtra(NewEntryActivity.EXTRA_REPLY)?.let { reply ->
-                val entry = Entry(reply,555, 5555f)
+                val entry = Entry(reply,555, 5555)
                 entryViewModel.insert(entry)
             }
         } else {
@@ -330,7 +329,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         val sharedPreferences = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
 
         val editor = sharedPreferences.edit()
-        editor.putFloat("key1", previousTotalSteps)
+        editor.putInt("key1", previousTotalSteps)
         editor.apply()
     }
 
@@ -338,7 +337,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
         // In this function we will retrieve data
         val sharedPreferences = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
-        val savedNumber = sharedPreferences.getFloat("key1", 0f)
+        val savedNumber = sharedPreferences.getInt("key1", 0)
 
         // Log.d is used for debugging purposes
         Log.d("MainActivity", "$savedNumber")

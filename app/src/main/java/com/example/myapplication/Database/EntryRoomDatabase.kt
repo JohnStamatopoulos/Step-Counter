@@ -40,14 +40,16 @@ abstract class EntryRoomDatabase: RoomDatabase() {
                     entryDao.deleteAll()
 
                     // Add sample entries.
-                    var entry = Entry("10/10/2022",1,100f)
-                    entryDao.insert(entry)
-                    entry = Entry("10/10/2021",2,200f)
-                    entryDao.insert(entry)
-                    entry = Entry("10/10/2024",3,300f)
-                    entryDao.insert(entry)
-                    entry = Entry("10/10/2023",4,400f)
-                    entryDao.insert(entry)
+                    /*
+                        var entry = Entry("10/10/2022",1,100)
+                        entryDao.insert(entry)
+                        entry = Entry("10/10/2021",2,200)
+                        entryDao.insert(entry)
+                        entry = Entry("10/10/2024",3,300)
+                        entryDao.insert(entry)
+                        entry = Entry("10/10/2023",4,400)
+                        entryDao.insert(entry)
+                    */
 
                     // TODO: Add your own entries!
                 }

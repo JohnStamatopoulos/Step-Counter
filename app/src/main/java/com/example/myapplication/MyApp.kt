@@ -35,7 +35,7 @@ class MyApp : Application() {
             val serviceChannel = NotificationChannel(
                 CHANNEL_ID,
                 "Service Channel",
-                NotificationManager.IMPORTANCE_HIGH
+                NotificationManager.IMPORTANCE_LOW
             )
             serviceChannel.description = "This is ServiceChannel description"
             val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

@@ -9,57 +9,38 @@
 
     <!--Text View for the "Steps" displayed-->
 
-    <TextView
-        android:id="@+id/steps"
+    <Button
+        android:id="@+id/btnLoad"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="Steps"
-        android:textColor="@color/black"
-        android:textSize="45sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:text="Load"
+        app:layout_constraintEnd_toEndOf="@+id/btnStop"
+        app:layout_constraintStart_toStartOf="@+id/btnStop"
         app:layout_constraintTop_toTopOf="@+id/guideline2" />
 
     <!--Text View for the step count-->
-    <TextView
-        android:id="@+id/tv_stepsTaken"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="8dp"
-        android:text="0"
-        android:textColor="@color/black"
-        android:textSize="37sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/steps" />
 
     <Button
         android:id="@+id/btnStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
         android:text="Start Tracking"
         app:layout_constraintEnd_toStartOf="@+id/btnStop"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_stepsTaken" />
+        app:layout_constraintTop_toBottomOf="@+id/btnSave" />
 
     <Button
         android:id="@+id/btnStop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
         android:text="Stop Tracking"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/btnStart"
-        app:layout_constraintTop_toBottomOf="@+id/tv_stepsTaken" />
+        app:layout_constraintTop_toBottomOf="@+id/btnLoad" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"
@@ -70,6 +51,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnStart"
+        app:layout_constraintVertical_bias="0.5"
         tools:listitem="@layout/recyclerview_item" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -159,7 +141,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
-        app:layout_constraintEnd_toStartOf="@+id/tvTargetSteps"
+        app:layout_constraintEnd_toStartOf="@+id/tvStepsGoal"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
@@ -167,11 +149,10 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-        android:id="@+id/tvTargetSteps"
+        android:id="@+id/tvStepsGoal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/audiowide"
-        android:text="/3500"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
@@ -182,14 +163,13 @@
         app:layout_constraintTop_toBottomOf="@+id/progressBar"
         app:layout_constraintVertical_bias="0.0" />
 
-    <TextView
-        android:id="@+id/tvDebugSteps"
-        android:layout_width="0dp"
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="@+id/tvSteps"
-        app:layout_constraintStart_toStartOf="@+id/tvSteps"
-        app:layout_constraintTop_toBottomOf="@+id/tvSteps" />
+        android:text="Save"
+        app:layout_constraintEnd_toEndOf="@+id/btnStart"
+        app:layout_constraintStart_toStartOf="@+id/btnStart"
+        app:layout_constraintTop_toTopOf="@+id/guideline2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
