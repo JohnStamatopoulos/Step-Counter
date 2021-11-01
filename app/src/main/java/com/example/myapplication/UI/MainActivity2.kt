@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.example.myapplication.UI
 
 import android.content.Intent
 import android.os.Build
@@ -13,51 +13,71 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.Adapters.EntryListAdapter
+import com.example.myapplication.App.MyApp
 import com.example.myapplication.Model.Entry
+import com.example.myapplication.Other.Constants.STEPS
+import com.example.myapplication.R
 import com.example.myapplication.Services.StepTrackingService
 import com.example.myapplication.ViewModels.EntryViewModel
 import com.example.myapplication.ViewModels.EntryViewModelFactory
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.properties.Delegates
 
-class MainActivity2 : AppCompatActivity()/*, SensorEventListener*/ {
+class MainActivity2 : AppCompatActivity(){
 
     private val entryViewModel: EntryViewModel by viewModels {
         EntryViewModelFactory((application as MyApp).repository)
     }
-    //private var sensorManager: SensorManager? = null
-    //private var running = false
     private var simerinaBimata = 0
+    private var serviceRunning = false
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
+        Log.d("Main Activity", "onCreate and setContentView called")
         // SOS PREPEI na kaneis KAI observe to livedata, alliws den 8a ginontai ta load/save, ta selecet * kai insert dld!!??
         /*val temp = entryViewModel.latestEntry
         temp.observe(this)  {
             Log.d("MainActivity", "Observing...: ${temp.value}")
         }*/
-        initUI()
-        val x = StepTrackingService.simerinaBimata.observe(this){
+        entryViewModel.testInit()
+        /*entryViewModel.haveIRunToday.observe(this){
+            initUI(this.simerinaBimata)
+        }*/
+        val x = StepTrackingService.simerinaBimataService.observe(this){
             findViewById<TextView>(R.id.tvSteps).text = it.toString()
             if (it!=null){
+                simerinaBimata = it
                 initUIStepCounters(it)
             }
-            else{
-                initUIStepCounters(1)
-            }
-            Log.d("Main Activity", "Observing StepTrackingService.simerinaBimata with value: ${StepTrackingService.simerinaBimata.value}")
+            Log.d("Main Activity", "Observing StepTrackingService.simerinaBimata with value: ${StepTrackingService.simerinaBimataService.value}")
         }
-        initUIStepCounters(0)
+        initUI()
+        // tsekare an exw tre3ei shmera hdh.
+        // -An nai, fti3e to UI me autes tis times.
+        // -An oxi, ftia3e to UI me bhmata 0.
+
     }
+
+    /*fun subToObservers(){
+        entryViewModel.haveIRunToday.observe(this){
+
+        }
+    }*/
 
     override fun onResume() {
         super.onResume()
-
+        Log.d("Main Activity", "onResume called")
+        //initUI()
+//        entryViewModel.haveIRunToday.observe(this){
+//            initUI(this.simerinaBimata)
+//        }
     }
 
     private fun mResetSteps() {
+        Log.d("Main Activity", "mResetSteps called")
         val mStepsTaken = findViewById<TextView>(R.id.tvSteps)
         mStepsTaken.setOnClickListener {
             Toast.makeText(this, "Long tap to reset steps", Toast.LENGTH_SHORT).show()
@@ -69,16 +89,17 @@ class MainActivity2 : AppCompatActivity()/*, SensorEventListener*/ {
             Log.d("Main Activity", "mResetSteps")
             true
         }
-
     }
 
-    private fun mSaveData() {
+    private fun mSaveData(steps: Int) {
         val calendar: Calendar = Calendar.getInstance()
         val dateFormat = SimpleDateFormat("dd/MM/yyyy")
         val today = dateFormat.format(calendar.time)
-        //val id = Random(Random.nextInt())
         val id = 12
-        val newEntry = Entry(today,id,simerinaBimata)
+
+        val newEntry = Entry(today,id,steps)
+        //val newEntry = Entry(today,id,50)
+
         entryViewModel.insert(newEntry)
         Log.d("Main Activity", "mSaveData: Ekana save to: $newEntry")
     }
@@ -94,21 +115,30 @@ class MainActivity2 : AppCompatActivity()/*, SensorEventListener*/ {
         entryViewModel.haveIRunToday.observe(this){ todayEntry->
             //simerinaBimata = myStepsToday IFF I have already run today, else 0
             simerinaBimata = todayEntry?.steps ?: 0
+            initUIStepCounters(simerinaBimata)
             val mStepsTaken = findViewById<TextView>(R.id.tvSteps)
             mStepsTaken.text = ("$simerinaBimata")
+
+            // TODO find proper solution to this
+            // manually removing the observer, to avoid being called every time the DB changes
+            //entryViewModel.haveIRunToday.removeObservers(this)
             Log.d("Main Activity", "mLoadData: Ekana load to: $todayEntry")
         }
+
     }
 
-    private fun initUI(){
+    private fun initUI(/*steps: Int*/){
+        Log.d("Main Activity", "initUI called")
         initRecyclerView()
         mLoadData()
         mResetSteps()
         makeButtonsUseful()
-        //initUIStepCounters(0)
+        // to viewmodel argei na arxikopoih8ei....
+        //initUIStepCounters(steps)
     }
 
     private fun initRecyclerView(){
+        Log.d("Main Activity", "initRecyclerView called")
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerview)
         val adapter = EntryListAdapter()
         recyclerView.adapter = adapter
@@ -122,25 +152,24 @@ class MainActivity2 : AppCompatActivity()/*, SensorEventListener*/ {
     }
 
     private fun makeButtonsUseful() {
-        findViewById<Button>(R.id.btnSave).setOnClickListener {
-            mSaveData()
-        }
-        findViewById<Button>(R.id.btnLoad).setOnClickListener {
-            mLoadData()
-        }
+        Log.d("Main Activity", "makeButtonsUseful called")
         findViewById<Button>(R.id.btnStart).setOnClickListener {
             startStepTrackingService()
         }
-        findViewById<Button>(R.id.btnStop).setOnClickListener {
-            stopStepTrackingService()
+        findViewById<Button>(R.id.btnStop).also {
+            it.setOnClickListener {
+                stopStepTrackingService()
+            }
+            it.isEnabled = false
         }
     }
 
     private fun initUIStepCounters(currentSteps: Int){
+        Log.d("Main Activity", "initUIStepCounters called with currentSteps = $currentSteps")
         findViewById<TextView>(R.id.tvStepsGoal).text = entryViewModel.stepsGoal
         findViewById<ProgressBar>(R.id.progressBar).let { progressBar ->
-            val test = entryViewModel.stepsGoal.substring(1).toInt()
-            val perCentGoal = ((currentSteps.toFloat() / test.toFloat()) * 100).toInt()
+            val mStepsGoal = entryViewModel.stepsGoal.substring(1).toInt()
+            val perCentGoal = ((currentSteps.toFloat() / mStepsGoal.toFloat()) * 100).toInt()
             progressBar.progress = perCentGoal
             if (perCentGoal >= 100){
                 findViewById<ImageView>(R.id.imgFire).visibility = View.VISIBLE
@@ -152,21 +181,42 @@ class MainActivity2 : AppCompatActivity()/*, SensorEventListener*/ {
     }
 
     private fun startStepTrackingService() {
-        val serviceIntent = Intent(this, StepTrackingService::class.java)
-        val x = findViewById<TextView>(R.id.tvSteps).text.toString().toInt()
-        serviceIntent.putExtra("steps", x)
-        //startService(serviceIntent)
-        //or this, maybe better
-        ContextCompat.startForegroundService(this, serviceIntent)
+        if (!serviceRunning) {
+            // before starting/creating the service, if I already have run today,
+            // send these steps and start counting from there.
+            // Else, start from 0.
+            // //today's steps is {todayEntry?.steps ?: 0}
+            val serviceIntent = Intent(this, StepTrackingService::class.java)
+            val x = findViewById<TextView>(R.id.tvSteps).text.toString().toInt()
+            serviceIntent.putExtra(STEPS, x)
+            //startService(serviceIntent)
+            //or this, maybe better
+            ContextCompat.startForegroundService(this, serviceIntent)
+
+            serviceRunning = true
+            findViewById<Button>(R.id.btnStop).isEnabled = true
+            findViewById<Button>(R.id.btnStart).isEnabled = false
+            Log.d("Main Activity", "startStepTrackingService called")
+        }
+
     }
 
     private fun stopStepTrackingService() {
-        val serviceIntent = Intent(this, StepTrackingService::class.java)
+        if (serviceRunning){
+            val serviceIntent = Intent(this, StepTrackingService::class.java)
+            stopService(serviceIntent)
 
-        stopService(serviceIntent)
+            // Pare apo to Service posa bhmata etrexa shmera,
+            // kai kanta save sthn DB.
+            simerinaBimata = StepTrackingService.simerinaBimataService.value ?: 0
+            mSaveData(simerinaBimata)
 
-        simerinaBimata = StepTrackingService.simerinaBimata.value ?: 0
-        mSaveData()
+            serviceRunning = false
+            findViewById<Button>(R.id.btnStop).isEnabled = false
+            findViewById<Button>(R.id.btnStart).isEnabled = true
+            Log.d("Main Activity", "stopStepTrackingService called")
+        }
+
     }
 
 }

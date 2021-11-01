@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.example.myapplication.App
 
 import android.app.NotificationManager
 import android.app.NotificationChannel
@@ -6,6 +6,7 @@ import android.os.Build
 import android.app.Application
 import android.content.Context
 import com.example.myapplication.Database.EntryRoomDatabase
+import com.example.myapplication.Repositories.EntryRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 
@@ -19,6 +20,8 @@ class MyApp : Application() {
     val database by lazy { EntryRoomDatabase.getDatabase(this, applicationScope) }
     val repository by lazy { EntryRepository(database.entryDao()) }
 
+    //lateinit var repository : EntryRepository
+
 
     companion object {
         const val CHANNEL_ID = "Service Channel Notification"
@@ -28,6 +31,8 @@ class MyApp : Application() {
         super.onCreate()
 
         createNotificationChannels()
+        //val database = EntryRoomDatabase.getDatabase(this, applicationScope)
+        //repository = EntryRepository(database.entryDao())
     }
 
     private fun createNotificationChannels() {

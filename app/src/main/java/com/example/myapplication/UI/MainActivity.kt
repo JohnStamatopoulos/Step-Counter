@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.example.myapplication.UI
 
 import android.app.Activity
 import android.content.Context
@@ -19,7 +19,9 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.Adapters.EntryListAdapter
+import com.example.myapplication.App.MyApp
 import com.example.myapplication.Model.Entry
+import com.example.myapplication.R
 import com.example.myapplication.Services.StepTrackingService
 import com.example.myapplication.ViewModels.EntryViewModel
 import com.example.myapplication.ViewModels.EntryViewModelFactory

@@ -1,20 +1,17 @@
 package com.example.myapplication.ViewModels
 
 import androidx.lifecycle.*
-import androidx.recyclerview.widget.RecyclerView
-import com.example.myapplication.EntryRepository
+import com.example.myapplication.Repositories.EntryRepository
 import com.example.myapplication.Model.Entry
-import com.example.myapplication.R
 import kotlinx.coroutines.launch
 
 class EntryViewModel(private val repository: EntryRepository) : ViewModel() {
-
     // Using LiveData and caching what allEntries returns has several benefits:
     // - We can put an observer on the data (instead of polling for changes) and only update the
     //   the UI when the data actually changes.
     // - Repository is completely separated from the UI through the ViewModel.
-    val allEntries/*: LiveData<List<Entry>>*/ = repository.allEntries
-    val latestEntry/*: LiveData<Entry>*/ = repository.lastEntry
+    val allEntries = repository.allEntries
+    val latestEntry = repository.lastEntry
     val haveIRunToday = repository.haveIRunToday
 
     var stepsGoal = "/100" //TODO make this varieable defined by user
@@ -26,8 +23,21 @@ class EntryViewModel(private val repository: EntryRepository) : ViewModel() {
         repository.insert(entry)
     }
 
-    fun getTestLastEntryVM(): LiveData<Entry> {
-        return repository.getTestLastEntryRepo()
+    fun getIfIRun():Boolean{
+        if (haveIRunToday.value == null){
+            return false
+        }
+        else{
+            return true
+        }
+    }
+
+    init {
+        println("hi Main Activity from VModel")
+    }
+
+    fun testInit(){
+        println("hi Main Activity from VModel testInit()")
     }
 }
 

@@ -21,12 +21,12 @@ abstract class EntryRoomDatabase: RoomDatabase() {
     private class EntryDatabaseCallback(private val scope: CoroutineScope) : RoomDatabase.Callback() {
         override fun onOpen(db: SupportSQLiteDatabase) {
             super.onOpen(db)
-
-            INSTANCE?.let { database ->
+            Log.d("Main Database Callback", "onOpen called")
+            /*INSTANCE?.let { database ->
                 scope.launch {
                     Log.d("Database Callback", "onOpen called")
                 }
-            }
+            }*/
         }
 
         override fun onCreate(db: SupportSQLiteDatabase) {

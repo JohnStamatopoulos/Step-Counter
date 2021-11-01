@@ -16,45 +16,33 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.MutableLiveData
-import com.example.myapplication.MainActivity
-import com.example.myapplication.MainActivity2
-import com.example.myapplication.MyApp
+import com.example.myapplication.UI.MainActivity2
+import com.example.myapplication.App.MyApp
+import com.example.myapplication.Other.Constants.STEPS
 import com.example.myapplication.R
-import kotlinx.coroutines.runBlocking
 
 class StepTrackingService: LifecycleService(), SensorEventListener {
 
     var sensorManager: SensorManager? = null
-    //TODO allaze opws prepei tis times tous, gt twra einai LiveData
-
-    //TODO alla3e auta, me ta parakatw companion object
-//    var running : Boolean = false
-//    var simerinaBimata = Float
 
     companion object {
-        var running = MutableLiveData<Boolean>()
-        var simerinaBimata = MutableLiveData<Int>()
-        //var simpleSteps = 0f
+        var simerinaBimataService = MutableLiveData<Int>()
         var simpleRunning = false
     }
-
 
     // Get the layouts to use in the custom notification
     var notificationLayout : RemoteViews? = null
     var notificationLayoutExpanded : RemoteViews? = null
 
     lateinit var globalNotification: Notification
-
     lateinit var notificationManager: NotificationManagerCompat
 
     //this will be called only the first time we create our service
     override fun onCreate() {
         super.onCreate()
         Log.d("Service", "onCreate called")
+
         simpleRunning = true
-        //running.postValue(true)
-        //simerinaBimata.postValue(0f)
-        //simpleSteps = 0f
 
         notificationManager = NotificationManagerCompat.from(this)
 
@@ -99,9 +87,9 @@ class StepTrackingService: LifecycleService(), SensorEventListener {
         super.onStartCommand(intent, flags, startId)
         Log.d("Service", "onStartCommand called")
         //return super.onStartCommand(intent, flags, startId)
-        val lastSteps = intent?.getIntExtra("steps",0)
-        Log.d("Service", "onStartCommand has lastSteps = ${lastSteps}")
-        simerinaBimata.value = lastSteps!!
+        val previousStepsFromTodayOrZero = intent?.getIntExtra(STEPS,0)
+        Log.d("Service", "onStartCommand has lastSteps = ${previousStepsFromTodayOrZero}")
+        simerinaBimataService.value = previousStepsFromTodayOrZero!!
         simpleRunning = true
         //loadData()
         startForeground(1,globalNotification)
@@ -113,8 +101,6 @@ class StepTrackingService: LifecycleService(), SensorEventListener {
         super.onDestroy()
         Log.d("Service", "onDestroy called")
         simpleRunning = false
-        //previousTotalSteps = totalSteps
-        //saveData()
     }
 
     override fun onBind(p0: Intent): IBinder? {
@@ -126,10 +112,8 @@ class StepTrackingService: LifecycleService(), SensorEventListener {
     override fun onSensorChanged(event: SensorEvent?) {
         if (simpleRunning) {
             // setValue, not postValue cause this need to happen immediately
-            simerinaBimata.value = simerinaBimata.value?.plus(1)
-            Log.d("Service, sensorChanged" , "Σημερινα Βηματα: ${simerinaBimata.value}")
-            //simpleSteps++
-            //Log.d("Service, sensorChanged" , "Σημερινα Βηματα: ${simpleSteps}")
+            simerinaBimataService.value = simerinaBimataService.value?.plus(1)
+            Log.d("Service, sensorChanged" , "Σημερινα Βηματα: ${simerinaBimataService.value}")
         }
     }
 

@@ -23,10 +23,7 @@ interface EntryDao {
     suspend fun deleteAll()
 
     @Query("SELECT * FROM entry_table ORDER BY date DESC LIMIT 1")
-    fun getMostRecentEntry(): Flow<Entry> /*
-        val testEntry = Entry("testDate", 0, -100f)
-        return testEntry
-    }*/
+    fun getMostRecentEntry(): Flow<Entry>
 
     @Query("SELECT * FROM entry_table WHERE date=:today")
     fun haveIRunToday(today:String): Flow<Entry?>
