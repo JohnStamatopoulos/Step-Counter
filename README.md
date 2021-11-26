@@ -1,4 +1,5 @@
 # Step-Counter
+## *(project is incomplete, and currently paused)*
 This is a sample step-counter app.
 
 It tracks/counts the user's steps, for as long as they want, and displays different days and the steps of that day.
